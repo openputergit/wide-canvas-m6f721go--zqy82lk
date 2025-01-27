@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel App</title>
+    <script src="https://unpkg.com/three@0.139.2/build/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .dark {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .destination-slider {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider-content {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .destination-card {
+            min-width: 300px;
+            margin: 0 1rem;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <lottie-player
+            src="https://assets2.lottiefiles.com/packages/lf20_usmfx6bp.json"
+            background="transparent"
+            speed="1"
+            style="width: 150px; height: 150px;"
+            loop
+            autoplay
+        ></lottie-player>
+        <h1 class="text-4xl font-bold mt-4">Travel App<span class="loading-dots">...</span></h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content hidden" id="mainContent">
+        <!-- Navbar -->
+        <nav class="bg-white shadow-lg p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center">
+                    <img src="logo.png" alt="Travel App Logo" class="h-8 w-auto mr-2">
+                    <span class="text-xl font-semibold">Travel App</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 hover:bg-gray-100 rounded-full" id="searchBtn">
+                        <i class="bi bi-search text-xl"></i>
+                    </button>
+                    <button class="p-2 hover:bg-gray-100 rounded-full">
+                        <i class="bi bi-bell text-xl"></i>
+                    </button>
+                    <button class="p-2 hover:bg-gray-100 rounded-full" id="themeToggle">
+                        <i class="bi bi-moon text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Sections -->
+        <div class="container mx-auto px-4 py-8">
+            <!-- Promo Banner -->
+            <div class="bg-blue-600 text-white p-4 rounded-lg mb-8 text-center">
+                <p class="text-lg font-semibold">USE CODE: FIRST TRAVEL for 30% off on first journey</p>
+            </div>
+
+            <!-- Feature Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Destinations -->
+                <div class="destination-slider bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">
+                        <i class="bi bi-geo-alt-fill text-blue-600"></i> Destinations
+                    </h2>
+                    <div class="slider-content" id="destinationSlider">
+                        <!-- Destination cards will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Map -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">
+                        <i class="bi bi-map-fill text-blue-600"></i> Map
+                    </h2>
+                    <div id="map"></div>
+                </div>
+
+                <!-- Transport -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">
+                        <i class="bi bi-truck text-blue-600"></i> Transport
+                    </h2>
+                    <div class="grid grid-cols-3 gap-4">
+                        <button class="p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <i class="bi bi-bus-front text-2xl"></i>
+                            <p class="mt-2">Bus</p>
+                        </button>
+                        <button class="p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <i class="bi bi-train-front text-2xl"></i>
+                            <p class="mt-2">Train</p>
+                        </button>
+                        <button class="p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <i class="bi bi-car-front text-2xl"></i>
+                            <p class="mt-2">Car</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media and Vlog Links -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">
+                        <i class="bi bi-images text-blue-600"></i> Media Links
+                    </h2>
+                    <div class="grid grid-cols-2 gap-4" id="mediaLinks">
+                        <!-- Media links will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">
+                        <i class="bi bi-camera-video text-blue-600"></i> Vlog Links
+                    </h2>
+                    <div class="grid grid-cols-1 gap-4" id="vlogLinks">
+                        <!-- Vlog links will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loading Screen Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainContent').classList.remove('hidden');
+            }, 2000);
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        let isDark = false;
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            document.body.classList.toggle('dark');
+            themeToggle.innerHTML = isDark ? 
+                '<i class="bi bi-sun text-xl"></i>' : 
+                '<i class="bi bi-moon text-xl"></i>';
+        });
+
+        // Search Functionality
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            // Simulate keyboard opening on mobile
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = 'Search destinations...';
+            searchInput.classList.add('fixed', 'top-16', 'left-0', 'w-full', 'p-4', 'bg-white', 'shadow-lg');
+            document.body.appendChild(searchInput);
+            searchInput.focus();
+        });
+
+        // Destination Slider
+        const destinations = [
+            { name: 'Kolkata', image: 'https://source.unsplash.com/300x200/?kolkata' },
+            { name: 'Darjeeling', image: 'https://source.unsplash.com/300x200/?darjeeling' },
+            { name: 'Sundarbans', image: 'https://source.unsplash.com/300x200/?sundarbans' }
+        ];
+
+        const slider = document.getElementById('destinationSlider');
+        destinations.forEach(dest => {
+            const card = `
+                <div class="destination-card">
+                    <img src="${dest.image}" class="w-full h-32 object-cover rounded-lg" alt="${dest.name}">
+                    <h3 class="mt-2 font-semibold">${dest.name}</h3>
+                </div>
+            `;
+            slider.innerHTML += card;
+        });
+
+        // Google Maps Integration
+        function initMap() {
+            const westBengal = { lat: 23.5204, lng: 87.9119 };
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                center: westBengal,
+            });
+        }
+
+        // Load Google Maps API
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap`;
+        script.async = true;
+        document.head.appendChild(script);
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
